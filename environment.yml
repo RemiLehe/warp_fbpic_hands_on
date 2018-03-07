@@ -1,7 +1,11 @@
+channels:
+  - conda-forge
 dependencies:
   - python
   - numpy
   - h5py
   - scipy
+  - dateutil
+  - gcc
   - pip:
     - Forthon
