@@ -1,2 +1,9 @@
+git clone https://bitbucket.org/dpgrote/pygist.git \
+    && cd pygist
+    && python setup.py config \
+    && python setup.py install \
+    && cd .. \
+    && rm -rf pygist
+
 git clone https://bitbucket.org/berkeleylab/warp
 cd warp/pywarp90 ; make install3
