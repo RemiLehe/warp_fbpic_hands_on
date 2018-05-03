@@ -8,6 +8,8 @@ dependencies:
   - h5py
   - scipy
   - gcc
+  - pyfftw
+  - mpi4py
   - ghostscript
   - openpmd_viewer
   - pip:
