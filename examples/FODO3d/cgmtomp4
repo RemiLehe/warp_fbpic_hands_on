@@ -1,0 +1,70 @@
+#!/usr/bin/env python
+##########################################################################
+# Author: Jean-Luc Vay
+# Date: 11/13/2012
+##########################################################################
+# This script converts sequential frames from a cgm file into jpeg files.
+# They are all put into a new directory that has the same name as the
+# cgm file prefix.
+# Note that it relies on gist and gs. All input files are first converted
+# into a series of ps files, one per frame. Then ps is converted to jpeg.
+# Then the jpeg files are cropped.
+#
+# To use it, type
+#
+# convertcgmtojpg.py number_of_frames full_filename
+#
+# The resulting files are converted to a .mp4 file using ffmpeg
+#
+##########################################################################
+
+import sys
+import os
+import string
+import re
+
+# --- Print out usage line if needed.
+if len(sys.argv) < 3 or len(sys.argv) > 5:
+  print('Error: command line had the wrong format, must be one of')
+  print('cgmtomp4.py filename numframes')
+  print('cgmtomp4.py filename framestart frameend framestep')
+
+# --- Get the filename
+file = sys.argv[1]
+m = re.search(r'(.+)[.](\w+)',file)
+prefix = m.group(1)
+suffix = m.group(2)
+
+# --- Get the frames to be processed.
+if len(sys.argv) == 3:
+  numframes = string.atoi(sys.argv[2])
+  framestart = 1
+  frameend = numframes
+  framestep = 1
+elif len(sys.argv) in [4,5]:
+  framestart = int(sys.argv[2])
+  frameend = int(sys.argv[3])
+  if len(sys.argv) == 5:
+    framestep = int(sys.argv[4])
+  else:
+    framestep = 1
+  numframes = frameend - framestart + 1
+
+os.system('./convertcgmtojpg '+file+' %g %g %g'%(framestart,frameend,framestep))
+os.chdir(prefix)
+os.system('../mkmovie -rate 12 '+prefix+'. '+prefix+'.mp4')
+os.system('mv '+prefix+'.mp4 ../')
+os.chdir('..')
+os.system('rm -fr '+prefix)
+  
+
+
+
+
+
+
+
+
+
+
+

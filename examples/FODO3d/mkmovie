@@ -1,0 +1,45 @@
+#!/usr/bin/env python
+##########################################################################
+# Author: Jean-Luc Vay
+# Date: 11/19/2007
+##########################################################################
+# This script converts sequential frames to a movie using ffmpeg.
+#
+# To use it, type
+#
+# mkmovie image movie.mp4
+#
+##########################################################################
+
+import os
+import sys
+import string
+
+usage = "\n Usage: mkmovie [-format jpg -fmt %06d] image movie.mp4\n"
+
+# --- set defaults
+argdict = {'format':'jpg',
+           'fmt'   :'%06d',
+           'rate'  : 12}
+
+# --- get arguments
+for i,arg in enumerate(sys.argv):
+  if arg[0]=='-':
+    if arg[1:] in list(argdict.keys()):
+      argdict[arg[1:]] = sys.argv[i+1]
+    else:
+      print('\n Error in argument list: '+arg+' is not a valid argument')
+      print(usage)
+      raise('')
+      
+input  = sys.argv[-2]
+output = sys.argv[-1]
+fmt = argdict['fmt']
+format = argdict['format']
+rate = int(argdict['rate'])
+
+#line = 'ffmpeg -y -b 5000 -r %g -i '%rate+input+fmt+'.'+format+' -strict -1 -qscale 1.0 '+output
+line = 'ffmpeg -y -r %g -i '%rate+input+fmt+'.'+format+' -strict -1 -qscale 1.0 '+output
+print(line)
+os.system(line)
+print('done\n')
