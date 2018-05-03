@@ -23,11 +23,14 @@ conda install -c rlehe openpmd_viewer
 
 ### Using Binder
 
-In order to launch your interactive environment, click on the link below:
-
-[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/RemiLehe/warp_fbpic_hands_on/master)
+In order to launch your interactive environment, click on this link: [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/RemiLehe/warp_fbpic_hands_on/master)
 
 (This may take one or two minutes to start up.)
 
 Once the environment is ready, you can open a Terminal by clicking `New > Terminal`
 (in the upper right corner).
+
+
+## Hands-on examples
+
+For examples of laser-plasma acceleration: see [this page](./plasma_acceleration/README.md) 
