@@ -33,4 +33,4 @@ Once the environment is ready, you can open a Terminal by clicking `New > Termin
 
 ## Hands-on examples
 
-For examples of laser-plasma acceleration: see [this page](./plasma_acceleration/README.md) 
+For examples of laser-plasma acceleration: see [this page](https://github.com/RemiLehe/warp_fbpic_hands_on/tree/master/examples/plasma_acceleration) 
