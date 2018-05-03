@@ -4,6 +4,7 @@ channels:
 dependencies:
   - python
   - numpy
+  - numba
   - h5py
   - scipy
   - gcc
@@ -12,3 +13,4 @@ dependencies:
   - pip:
     - Forthon
     - python-dateutil
+    - fbpic
