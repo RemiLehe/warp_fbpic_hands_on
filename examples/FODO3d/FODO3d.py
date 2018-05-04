@@ -7,7 +7,7 @@ that is matched to the lattice. The beam is propagated one lattice period.
 # --- of a Warp input file.
 from warp import *
 from warp.data_dumping.openpmd_diag import ParticleDiagnostic
-from rswarp.diagnostics import FieldDiagnostic
+from warp.data_dumping.openpmd_diag import ElectrostaticFieldDiagnostic
 
 l_movieplot = False
 l_movieplot3d = False
@@ -264,8 +264,9 @@ particle_diagnostic_0 = ParticleDiagnostic(period = particleperiod, top = top, w
                                           species = {species.name: species for species in listofallspecies},
                                           comm_world=comm_world, lparallel_output=False)
 fieldperiod = 10
-efield_diagnostic_0 = FieldDiagnostic.ElectrostaticFields(solver=solverE, top=top, w3d=w3d, comm_world = comm_world,
-                                                          period=fieldperiod, write_dir='diags/hdf5')
+efield_diagnostic_0 = ElectrostaticFieldDiagnostic(
+    solver=solverE, top=top, w3d=w3d, comm_world = comm_world,
+    period=fieldperiod, write_dir='diags/hdf5')
 
 installafterstep(particle_diagnostic_0.write)
 installafterstep(efield_diagnostic_0.write)
