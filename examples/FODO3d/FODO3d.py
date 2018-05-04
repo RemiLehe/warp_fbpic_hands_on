@@ -6,6 +6,8 @@ that is matched to the lattice. The beam is propagated one lattice period.
 # --- of the Warp data and routines. This is typically the first command
 # --- of a Warp input file.
 from warp import *
+from warp.data_dumping.openpmd_diag import ParticleDiagnostic
+from rswarp.diagnostics import FieldDiagnostic
 
 l_movieplot = False
 l_movieplot3d = False
@@ -250,8 +252,23 @@ def runtimeplots(nsteps=steps_p_perd):
 # --- The generate command does the initialization, including creating
 # --- the particles, doing the initial Poisson solve, and calculating
 # --- initial diagnostics and moments.
+solverE = MultiGrid3D()
+registersolver(solverE)
 package("w3d")
 generate()
+
+# --- Define diagnostics
+
+particleperiod = 10
+particle_diagnostic_0 = ParticleDiagnostic(period = particleperiod, top = top, w3d = w3d,
+                                          species = {species.name: species for species in listofallspecies},
+                                          comm_world=comm_world, lparallel_output=False)
+fieldperiod = 10
+efield_diagnostic_0 = FieldDiagnostic.ElectrostaticFields(solver=solverE, top=top, w3d=w3d, comm_world = comm_world,
+                                                          period=fieldperiod, write_dir='diags/hdf5')
+
+installafterstep(particle_diagnostic_0.write)
+installafterstep(efield_diagnostic_0.write)
 
 # --- Directly call the user defined function, producing plots of the initial conditions.
 runtimeplots()
