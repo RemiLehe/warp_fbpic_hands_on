@@ -17,7 +17,7 @@ from warp.init_tools import *
 # General parameters
 # ------------------
 # Dimension of simulation ("3d", "circ", "2d")
-dim = "2d"
+dim = "circ"
 # Number of azimuthal modes beyond m=0, for "circ" (not used for "2d" and "3d")
 circ_m = 1
 # Total number of timesteps in the simulation
@@ -56,7 +56,7 @@ diag_period = 20
 # Numerical parameters
 # --------------------
 # Field solver (0:Yee, 1:Karkkainen on EF,B, 3:Lehe)
-stencil = 1
+stencil = 0
 # Particle shape (1:linear, 2:quadratic, 3:cubic)
 depos_order = 1
 # Gathering mode (1:from cell centers, 4:from Yee mesh)
