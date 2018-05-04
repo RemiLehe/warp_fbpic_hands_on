@@ -11,3 +11,5 @@ make install3
 cd ../../
 rm -rf warp
 
+rm environment.yml
+rm postBuild

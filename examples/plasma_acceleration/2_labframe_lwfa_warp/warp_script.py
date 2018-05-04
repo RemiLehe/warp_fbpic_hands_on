@@ -56,7 +56,7 @@ diag_period = 20
 # Numerical parameters
 # --------------------
 # Field solver (0:Yee, 1:Karkkainen on EF,B, 3:Lehe)
-stencil = 0
+stencil = 1
 # Particle shape (1:linear, 2:quadratic, 3:cubic)
 depos_order = 1
 # Gathering mode (1:from cell centers, 4:from Yee mesh)
@@ -69,28 +69,18 @@ particle_pusher = 1
 # Turn current smoothing on or off (0:off; 1:on)
 use_smooth = 1
 # Number of passes of smoother and compensator in each direction (x, y, z)
-npass_smooth = array([[ 0 , 0 ], [ 0 , 0 ], [ 1 , 1 ]])
+npass_smooth = array([[ 1 , 0 ], [ 1 , 0 ], [ 1 , 0 ]])
 # Smoothing coefficients in each direction (x, y, z)
-alpha_smooth = array([[ 0.5, 3.], [ 0.5, 3.], [0.5, 3./2]])
+alpha_smooth = array([[ 0.5, 3./2], [ 0.5, 3./2], [0.5, 3./2]])
 # Stride in each direction (x, y, z)
 stride_smooth = array([[ 1 , 1 ], [ 1 , 1 ], [ 1 , 1 ]])
 
 # Laser parameters
 # ----------------
-# Initialize laser (0:off, 1:on)
-use_laser = 1
 # Position of the antenna (meters)
 laser_source_z = 0.e-6
 # Polarization angle with respect to the x axis (rad)
-laser_polangle = pi/2
-
-# Laser file:
-# When using a laser profile that was experimentally
-# measured, provide a string with the path to an HDF5 laser file,
-# otherwise provide None and a Gaussian pulse will be initialized
-laser_file = None
-laser_file_energy = 2. # When using a laser file, energy in Joule of the pulse
-
+laser_polangle = 0.
 # Gaussian pulse:
 # Laser amplitude at focus
 laser_a0 = 1.
@@ -99,18 +89,12 @@ laser_w0 = 4.e-6
 # Length of the pulse (length from the peak to 1/e of the amplitude ; meters)
 laser_ctau = 3.e-6
 # Initial position of the centroid (meters)
-laser_z0 = -2 * laser_ctau
+laser_z0 = -1.5 * laser_ctau
 # Focal position
 laser_zfoc = 4.5e-05
 
 # Plasma macroparticles
 # ---------------------
-# Initialize some preexisting plasmas electrons (0:off, 1:on)
-# (Can be used in order to neutralize pre-ionized ions, if any,
-# or in order to simulate a plasma without having to initialize ions)
-use_preexisting_electrons = 1
-# Initialize plasma ions (0:off, 1:on)
-use_ions = 1
 # Number of macroparticles per cell in each direction
 # In Circ, nppcelly is the number of particles along the
 # azimuthal direction. Use a multiple of 4*circ_m
@@ -122,27 +106,16 @@ plasma_nz = 2
 # --------------------------
 # Reference plasma density (in number of particles per m^3)
 n_plasma = 2.5e25
-# Relative density of the preexisting electrons (relative to n_plasma)
-rel_dens_preexisting_electrons = 1.
-# The different elements used. (Only used if use_ions is different than 0.)
-# relative_density is the density relative to n_plasma.
-# q_start is the ionization state of the ions at the beginning of the simulation
-# q_max is the maximum ionization state
-# If q_start is not equal to q_max, ionization between states will be computed.
-ion_states = { 'Hydrogen': {'relative_density':1., 'q_start':1, 'q_max':1 },
-                 'Helium': {'relative_density':0.25, 'q_start':0, 'q_max':2 } }
 # Positions between which the plasma is initialized
 # (Transversally, the plasma is initialized between -plasma_xmax and
 # plasma_xmax, along x, and -plasma_ymax and plasma_ymax along y)
-plasma_zmin = 1.e-6
+plasma_zmin = 0.e-6
 plasma_zmax = 1500.e-6
 plasma_xmax = xmax
 plasma_ymax = ymax
 
 # Define your own profile and profile parameters below
-ramp_start = 0.e-6
 ramp_length = 20.e-6
-ramp_plateau = 20.e-6
 def plasma_dens_func( x, y, z ):
     """
     User-defined function: density profile of the plasma
@@ -162,65 +135,9 @@ def plasma_dens_func( x, y, z ):
     # Allocate relative density
     n = ones_like(z)
     # Make linear ramp
-    n = where( z<ramp_start+ramp_length, (z-ramp_start)/ramp_length, n )
+    n = where( z<ramp_length, z/ramp_length, n )
     # Supress density before the ramp
-    n = where( z<ramp_start, 0., n )
-    # Reduce density by half after the ramp
-    n = where( z> ramp_start+ramp_length+ramp_plateau, 0.5*n, n )
-    # Put the density to 0 later
-    n = where( z> ramp_start+ramp_length+2*ramp_plateau, 0., n )
-
-    return(n)
-
-# Relativistic beam
-# -----------------
-# Initialize beam electrons (0:off, 1:on)
-# (Please be aware that initializing a beam in 2D geometry makes very little
-# physical sense, because of the long range of its space-charge fields)
-use_beam = 0
-# Longitudinal momentum of the beam
-beam_uz = 100.
-# Beam density
-n_beam = 1.e26
-# Number of macroparticles per cell in each direction
-beam_nx = 2*plasma_nx
-beam_ny = 2*plasma_ny
-beam_nz = 2*plasma_nz
-# Positions between which the beam is initialized
-# (Transversally, the plasma is initialized between -plasma_xmax and
-# plasma_xmax, along x, and -plasma_ymax and plasma_ymax along y)
-beam_zmin = -12.e-6
-beam_zmax = -10.e-6
-beam_xmax = 3.e-6
-beam_ymax = 3.e-6
-
-# Define your own profile and profile parameters below
-beam_rmax = beam_xmax
-def beam_dens_func(x, y, z):
-    """
-    User-defined function: density profile of the beam
-
-    It should return the relative density with respect to n_beam,
-    at the position x, y, z (i.e. return a number between 0 and 1)
-
-    Parameters
-    ----------
-    x, y, z: 1darrays of floats
-        Arrays with one element per macroparticle
-    Returns
-    -------
-    n : 1d array of floats
-        Array of relative density, with one element per macroparticles
-    """
-    # Allocate relative density
-    n = ones_like(z)
-    # Longitudinal profile: parabolic
-    n = n*(z - beam_zmin)*(beam_zmax - z) * 4/(beam_zmax - beam_zmin)**2
-    # Transverse profile: parabolic
-    r = sqrt( x**2 + y**2)
-    n = n*(1 - (r/beam_rmax)**2 )
-    # Put the density above rmax to 0
-    n[r > beam_rmax] = 0.
+    n = where( z<0, 0., n )
 
     return(n)
 
@@ -240,28 +157,13 @@ set_smoothing_parameters( use_smooth, dim, npass_smooth,
 
 # Creation of the species
 # -----------------------
-
-elec = None
-ions = None
-elec_from_ions = None
-beam = None
 # Create the plasma species
 # Reference weight for plasma species
-plasma_weight = prepare_weights( n_plasma, plasma_nx, plasma_ny,
+elec_weight = prepare_weights( n_plasma, plasma_nx, plasma_ny,
                             plasma_nz, dim, circ_m )
-if use_preexisting_electrons:
-    elec_weight = rel_dens_preexisting_electrons * plasma_weight
-    elec = Species(type=Electron, weight=elec_weight, name='electrons')
-if use_ions:
-    ions, elec_from_ions = initialize_ion_dict( ion_states, plasma_weight,
-                                                group_elec_by_element=True )
-# Create the beam
-if use_beam:
-    beam_weight = prepare_weights( n_beam, beam_nx, beam_ny,
-                                   beam_nz, dim, circ_m )
-    beam = Species(type=Electron, weight=beam_weight, name='beam')
+elec = Species(type=Electron, weight=elec_weight, name='electrons')
+
 # Set the numerical parameters only now: they affect the newly created species
-top.ssnpid = nextpid()
 set_numerics( depos_order, efetch, particle_pusher, dim)
 
 # Setup the field solver object
@@ -273,24 +175,13 @@ registersolver(em)
 
 # Introduce the laser
 # -------------------
-if use_laser==1:
-    add_laser( em, dim, laser_a0, laser_w0, laser_ctau, laser_z0,
-        zf=laser_zfoc, theta_pol=laser_polangle, source_z=laser_source_z,
-        laser_file=laser_file, laser_file_energy=laser_file_energy )
-
-# Introduce the beam
-# ------------------
-# Load the beam
-if use_beam:
-    PlasmaInjector( beam, None, w3d, top, dim, beam_nx, beam_ny, beam_nz,
-                beam_zmin, beam_zmax, beam_xmax, beam_ymax,
-                dens_func = beam_dens_func, uz_m=beam_uz )
-    initialize_beam_fields( em, dim, beam, w3d, top )
+add_laser( em, dim, laser_a0, laser_w0, laser_ctau, laser_z0,
+    zf=laser_zfoc, theta_pol=laser_polangle, source_z=laser_source_z )
 
 # Introduce the plasma
 # --------------------
 # Create an object to store the information about plasma injection
-plasma_injector = PlasmaInjector( elec, ions, w3d, top, dim,
+plasma_injector = PlasmaInjector( elec, None, w3d, top, dim,
         plasma_nx, plasma_ny, plasma_nz, plasma_zmin,
         plasma_zmax, plasma_xmax, plasma_ymax, plasma_dens_func )
 # Continuously inject the plasma, if the moving window is on
@@ -299,17 +190,14 @@ installuserinjection( plasma_injector.continuous_injection )
 # Setup the diagnostics
 # ---------------------
 remove_existing_directory( ['diags'] )
-# Whether to write the diagnostics in parallel
-parallel_output = False
 # Particle output
 diag1 = FieldDiagnostic( period=diag_period, top=top, w3d=w3d, em=em,
-            comm_world=comm_world, lparallel_output=parallel_output )
+            comm_world=comm_world, lparallel_output=False )
 installafterstep( diag1.write )
 # Field output
 diag2 = ParticleDiagnostic( period=diag_period, top=top, w3d=w3d,
-        species={species.name : species for species in listofallspecies},
-        particle_data={"position","momentum","weighting","id"},
-        comm_world=comm_world, lparallel_output=parallel_output )
+        species={'plasma electrons': elec},
+        comm_world=comm_world, lparallel_output=False )
 installafterstep( diag2.write )
 
 print('\nInitialization complete\n')

@@ -1,10 +1,14 @@
 # Laser-plasma examples
 
-## 1. Plasma-wakefield acceleration with FBPIC
+## 1. Plasma-wakefield acceleration with FBPIC (in the lab frame)
 
 - Open the file `fbpic_script.py` in
 `examples/plasma_acceleration/1_pwfa_labframe_fbpic`
 - The different functions/classes used are explained in [the online documentation](https://fbpic.github.io/api_reference/api_reference.html)
+- Run the file with
+```
+python fbpic_script.py
+```
 
 **Post-processing:**
 - If you run on your local computer, type:
@@ -15,6 +19,19 @@ jupyter notebook openPMD-visualization.ipynb
 in order to go to the folder `examples/plasma_acceleration/1_pwfa_labframe_fbpic`
 and click on `openPMD-visualization.ipynb`.
 
-## 2. Laser-wakefield acceleration with Warp
+**For other, more complete FBPIC examples (e.g. including ionization), see [this page](https://fbpic.github.io/how_to_run.html)**
 
-- Open the file `warp_script.py` in `plasma_acceleration/2_lwfa_labframe_warp`
+## 2. Laser-wakefield acceleration with Warp (in the lab frame)
+
+- Open the file `warp_script.py` in `examples/plasma_acceleration/2_lwfa_labframe_warp`
+
+**For other, more complete Warp examples, see [this page](https://bitbucket.org/berkeleylab/warp/src/master/scripts/examples/plasma_acceleration/)**
+
+- Run the file with 
+```
+python warp_script.py
+```
+
+- You can change the dimension to "3d" or "circ" in the file, and run the script again
+
+- For post-processing, use the same steps as for FBPIC
