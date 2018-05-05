@@ -37,13 +37,13 @@ gamma_boost = 10.
 dt = min( rmax/(2*gamma_boost*Nr), (zmax-zmin)/Nz/c )  # Timestep (seconds)
 # (See the section Advanced use > Running boosted-frame simulation
 # of the FBPIC documentation for an explanation of the above calculation of dt)
-N_step = 300     # Number of iterations to perform
+N_step = 301     # Number of iterations to perform
 
 # Boosted frame converter
 boost = BoostConverter(gamma_boost)
 
 # The laser (conversion to boosted frame is done inside 'add_laser_pulse')
-a0 = 2.          # Laser amplitude
+a0 = 4.          # Laser amplitude
 w0 = 25.e-6      # Laser waist
 tau = 15.e-15    # Laser duration
 z0 = -10.e-6     # Laser centroid
@@ -51,16 +51,14 @@ zfoc = 0.e-6     # Focal position
 lambda0 = 0.8e-6 # Laser wavelength
 
 # The density profile
-ramp_up = 5.e-3
-plateau = 8.e-2
-ramp_down = 5.e-3
+ramp_up = 500.e-6
 
 # The particles of the plasma
 p_zmin = 0.e-6   # Position of the beginning of the plasma (meters)
-p_zmax = ramp_up + plateau + ramp_down
+p_zmax = 5.e-3
 p_rmin = 0.      # Minimal radial position of the plasma (meters)
 p_rmax = 130.e-6 # Maximal radial position of the plasma (meters)
-n_e = 1.e19*1.e6 # The density in the lab frame (electrons.meters^-3)
+n_e = 2.e18*1.e6 # The density in the lab frame (electrons.meters^-3)
 p_nz = 2         # Number of particles per cell along z
 p_nr = 2         # Number of particles per cell along r
 p_nt = 6         # Number of particles per cell along theta
@@ -68,8 +66,7 @@ p_nt = 6         # Number of particles per cell along theta
 # Density profile
 # Convert parameters to boosted frame
 # (NB: the density is converted inside the Simulation object)
-ramp_up, plateau, ramp_down = \
-    boost.static_length( [ ramp_up, plateau, ramp_down ] )
+ramp_up,  = boost.static_length( [ ramp_up ] )
 # Define the density function
 def dens_func( z, r ):
     """
@@ -78,13 +75,8 @@ def dens_func( z, r ):
     # Allocate relative density
     n = np.ones_like(z)
     # Make ramp up
-    inv_ramp_up = 1./ramp_up
-    n = np.where( z<ramp_up, z*inv_ramp_up, n )
-    # Make ramp down
-    inv_ramp_down = 1./ramp_down
-    n = np.where( (z >= ramp_up+plateau) & (z < ramp_up+plateau+ramp_down),
-              - (z - (ramp_up+plateau+ramp_down) )*inv_ramp_down, n )
-    n = np.where( z >= ramp_up+plateau+ramp_down, 0, n)
+    n = np.where( z<ramp_up, z/ramp_up, n )
+    n = np.where( z<0, 0, n )
     return(n)
 
 # The diagnostics in the boosted frame
