@@ -29,8 +29,6 @@ and click on `openPMD-visualization.ipynb`.
 
 - Open the file `warp_script.py` in `examples/plasma_acceleration/2_lwfa_labframe_warp`
 
-**For other, more complete Warp examples, see [this page](https://bitbucket.org/berkeleylab/warp/src/master/scripts/examples/plasma_acceleration/)**
-
 - Run the file with 
 ```
 python warp_script.py
@@ -40,6 +38,7 @@ python warp_script.py
 
 - For post-processing, use the same steps as for FBPIC
 
+**For other, more complete Warp examples, see [this page](https://bitbucket.org/berkeleylab/warp/src/master/scripts/examples/plasma_acceleration/)**
 
 ## 3. Laser-wakefield acceleration with FBPIC (in the boosted frame)
 
@@ -52,4 +51,12 @@ For a summary of the boosted-frame technique (from a user's perspective), see
 ```
 python fbpic_script.py
 ```
-- Post-processing: as usual
+- Post-processing: as usual, open `openPMD-visualization.ipynb`. Note that the results in the boosted frame (`diags`) are unfamiliar and difficult to interpret, but the reconstructed results in the lab frame (`lab_diags`) are more familiar.
+
+## 4. Laser-wakefield acceleration with Warp (in the boosted frame)
+
+- Run the file with 
+```
+python warp_script.py
+```
+- Post-processing: same as for FBPIC
