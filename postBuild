@@ -8,7 +8,6 @@ rm -rf pygist
 git clone https://bitbucket.org/berkeleylab/warp
 cd warp/pywarp90
 make install3
-make pinstall3
 cd ../../
 
 rm environment.yml
