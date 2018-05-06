@@ -6,6 +6,7 @@ that is matched to the lattice. The beam is propagated one lattice period.
 # --- of the Warp data and routines. This is typically the first command
 # --- of a Warp input file.
 from warp import *
+from warp.init_tools import *
 from warp.data_dumping.openpmd_diag import ParticleDiagnostic
 from warp.data_dumping.openpmd_diag import ElectrostaticFieldDiagnostic
 
@@ -248,16 +249,18 @@ def runtimeplots(nsteps=steps_p_perd):
     limits(-0.02, +0.02, -0.04, +0.04)
     fma()
 
+
 # --- Switch to the w3d package, which runs the 3D PIC model.
 # --- The generate command does the initialization, including creating
 # --- the particles, doing the initial Poisson solve, and calculating
 # --- initial diagnostics and moments.
-solverE = MultiGrid3D()
+solverE=MultiGrid3D()
 registersolver(solverE)
 package("w3d")
 generate()
 
 # --- Define diagnostics
+remove_existing_directory( ['diags'] )
 
 particleperiod = 10
 particle_diagnostic_0 = ParticleDiagnostic(period = particleperiod, top = top, w3d = w3d,
@@ -313,9 +316,7 @@ if l_movieplot3d:
             cc=[pp]
             cc.append(DXColorBar(clm,labelscale=1.,label='Radius [cm]',position=[0.01,0.95],min=0.,max=1.7))
             ccc = DXCollect(cc)
-
             im = DXScale(ccc,[1.,1.,0.1])
-
             DXWriteImage('movie3d/img%g'%(iframe+10000),im,c,format='tiff')
             iframe+=1
     except:
