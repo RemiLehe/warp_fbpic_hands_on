@@ -9,5 +9,6 @@ git clone https://bitbucket.org/berkeleylab/warp
 cd warp/pywarp90
 make install3
 cd ../../
-rm -rf warp
 
+rm environment.yml
+rm postBuild
