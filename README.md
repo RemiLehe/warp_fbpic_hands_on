@@ -21,9 +21,14 @@ See below for more details:
 conda install -c rlehe openpmd_viewer
 ```
 
+Then clone this repository:
+```
+git clone https://github.com/RemiLehe/warp_fbpic_hands_on.git
+```
+
 ### Using Binder
 
-In order to launch your interactive environment, click on this link: [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/RemiLehe/warp_fbpic_hands_on/master)
+In order to launch your interactive environment, click on this link: [![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/RemiLehe/warp_fbpic_hands_on/protected)
 
 (This may take one or two minutes to start up.)
 
