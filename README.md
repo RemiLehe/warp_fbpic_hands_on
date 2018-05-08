@@ -35,7 +35,14 @@ In order to launch your interactive environment, click on this link: [![Binder](
 Once the environment is ready, you can open a Terminal by clicking `New > Terminal`
 (in the upper right corner).
 
+## Warp intro
+
+Slides on intro to the Warp code are available at [this page](https://github.com/RemiLehe/warp_fbpic_hands_on/tree/master/slides/BLAST_workshop_Warp_intro.pdf)
 
 ## Hands-on examples
 
 For examples of laser-plasma acceleration: see [this page](https://github.com/RemiLehe/warp_fbpic_hands_on/tree/master/examples/plasma_acceleration) 
+
+For examples on other topics, see other subdirectories in  see [this page](https://github.com/RemiLehe/warp_fbpic_hands_on/tree/master/examples)
+
+- Slides for step-by-step instructions are available at [this page](https://github.com/RemiLehe/warp_fbpic_hands_on/tree/master/slides/BLAST_workshop_Warp_examples.pdf)
